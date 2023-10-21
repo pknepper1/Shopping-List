@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     /** True if button has been clicked an odd number of times */
     boolean oddClick;
 
-    ArrayList<String> items;
+    ArrayList<Item> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
         helloText.setText((String) "Hello World!");
         oddClick = false;
         items = new ArrayList<>();
-        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        ItemsAdapter itemsAdapter = new ItemsAdapter(this, items);
+        items.add(new Item("Hello","World"));
         ListView listView = (ListView) findViewById(R.id.lvItems);
         listView.setAdapter(itemsAdapter);
     }

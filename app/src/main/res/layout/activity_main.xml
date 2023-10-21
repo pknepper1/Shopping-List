@@ -9,18 +9,16 @@
     android:orientation="vertical"
     android:clipToPadding="false"
     tools:context=".MainActivity">
+    <include layout="@layout/item"/>
     <ListView
         android:id="@+id/lvItems"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-
     </ListView>
-
     <TextView
         android:id="@+id/helloText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
     <Button
         android:id="@+id/helloButton"
         android:layout_width="fill_parent"
