@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.*;
+import java.util.ArrayList;
+
+import java.lang.reflect.Array;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +19,10 @@ public class MainActivity extends AppCompatActivity {
     /** True if button has been clicked an odd number of times */
     boolean oddClick;
 
+    ArrayList<String> items;
+
+    ArrayAdapter<String> itemsAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
         helloText = findViewById(R.id.helloText);
         helloText.setText((String) "Hello World!");
         oddClick = false;
+        items = new ArrayList<>();
+        itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+
     }
 
     public void onHelloButtonClick(View view) {
