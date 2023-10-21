@@ -21,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> items;
 
-    ArrayAdapter<String> itemsAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +30,9 @@ public class MainActivity extends AppCompatActivity {
         helloText.setText((String) "Hello World!");
         oddClick = false;
         items = new ArrayList<>();
-        itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-
+        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        ListView listView = (ListView) findViewById(R.id.lvItems);
+        listView.setAdapter(itemsAdapter);
     }
 
     public void onHelloButtonClick(View view) {
