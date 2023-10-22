@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
      * @param view Auto filled when attached to activity_main.xml
      */
     public void onRemoveButtonClick(View view) {
+        if (itemsAdapter.getCount() <= 0) {
+            return;
+        }
         itemsAdapter.remove(itemsAdapter.getItem(itemsAdapter.getCount() - 1));
     }
 }
