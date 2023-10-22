@@ -47,8 +47,8 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
         TextView itemName = (TextView) convertView.findViewById(R.id.itemName);
         TextView itemValue = (TextView) convertView.findViewById(R.id.itemPrice);
         // Populate the data into the template view using the data object
-        itemName.setText(item.getName());
-        itemValue.setText(item.getPrice());
+        itemName.setText(item.getName().getText());
+        itemValue.setText(item.getPrice().getText());
 
         return convertView;
     }

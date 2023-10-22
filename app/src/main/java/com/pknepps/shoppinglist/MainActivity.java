@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         removeButton = findViewById(R.id.removeButton);
         // sets itemsAdapter to an empty list and attaches a list view to it
         itemsAdapter = new ItemsAdapter(this);
+        itemsAdapter.add(new Item(this));
         ListView listView = (ListView) findViewById(R.id.lvItems);
         listView.setAdapter(itemsAdapter);
     }
@@ -47,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view Auto filled when attached to activity_main.xml
      */
     public void onAddButtonClick(View view) {
-        Item toAdd = new Item("fuck " + (itemsAdapter.getCount() + 1), "hey it works");
-        itemsAdapter.add(toAdd);
+        itemsAdapter.add(new Item(this));
     }
 
     /**
