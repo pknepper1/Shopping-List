@@ -3,21 +3,19 @@ package com.pknepps.shoppinglist;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
-import java.util.ArrayList;
-
-import java.lang.reflect.Array;
 
 public class MainActivity extends AppCompatActivity {
 
     /** Button which will add a new row to the array */
     Button addButton;
 
+    /** Button which will remove the last row to the array */
     Button removeButton;
 
-    /** True if button has been clicked an odd number of times */
-    boolean oddClick;
 
     /** The adapter that will display the items in from an array. */
     ItemsAdapter itemsAdapter;
@@ -38,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
         removeButton = findViewById(R.id.removeButton);
         // sets itemsAdapter to an empty list and attaches a list view to it
         itemsAdapter = new ItemsAdapter(this);
-        itemsAdapter.add(new Item(this));
-        ListView listView = (ListView) findViewById(R.id.lvItems);
+        Item firstItem = new Item(this);
+        firstItem.getName().addTextChangedListener(new NameWatcher(this, itemsAdapter, firstItem));
+        itemsAdapter.add(firstItem);
+        ListView listView = findViewById(R.id.lvItems);
         listView.setAdapter(itemsAdapter);
     }
 
@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
      * @param view Auto filled when attached to activity_main.xml
      */
     public void onAddButtonClick(View view) {
+        Item newItem = new Item(this);
+        newItem.getName().addTextChangedListener(new NameWatcher(this, itemsAdapter, newItem));
         itemsAdapter.add(new Item(this));
     }
 
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view Auto filled when attached to activity_main.xml
      */
     public void onRemoveButtonClick(View view) {
-        if (itemsAdapter.getCount() <= 0) {
+        if (itemsAdapter.getCount() <= 1) {
             return;
         }
         itemsAdapter.remove(itemsAdapter.getItem(itemsAdapter.getCount() - 1));

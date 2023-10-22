@@ -12,6 +12,7 @@ public class Item {
     /** The price of the item. */
     private EditText price;
 
+
     public Item(Context context, String name, String price) {
         this.name = new EditText(context);
         this.price = new EditText(context);
