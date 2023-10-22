@@ -11,39 +11,51 @@ import java.lang.reflect.Array;
 
 public class MainActivity extends AppCompatActivity {
 
-    /** The xml element helloText represented in java */
-    TextView helloText;
+    /** Button which will add a new row to the array */
+    Button addButton;
 
-    Button button;
+    Button removeButton;
 
     /** True if button has been clicked an odd number of times */
     boolean oddClick;
 
-    ArrayList<Item> items;
+    /** The adapter that will display the items in from an array. */
+    ItemsAdapter itemsAdapter;
 
+    /**
+     * Called when app is initialized.
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // loads activity_main.xml
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        button = findViewById(R.id.helloButton);
-        helloText = findViewById(R.id.helloText);
-        helloText.setText((String) "Hello World!");
-        oddClick = false;
-        items = new ArrayList<>();
-        ItemsAdapter itemsAdapter = new ItemsAdapter(this, items);
-        items.add(new Item("Hello","World"));
+        // loads buttons
+        addButton = findViewById(R.id.addButton);
+        removeButton = findViewById(R.id.removeButton);
+        // sets itemsAdapter to an empty list and attaches a list view to it
+        itemsAdapter = new ItemsAdapter(this);
         ListView listView = (ListView) findViewById(R.id.lvItems);
         listView.setAdapter(itemsAdapter);
     }
 
-    public void onHelloButtonClick(View view) {
-        String onClick = "What's Up Bitches!";
-        String onOtherClick = "Hello World!";
-        oddClick = !oddClick;
-        if (oddClick) {
-            helloText.setText(onClick);
-        } else {
-            helloText.setText(onOtherClick);
-        }
+    /**
+     * To run when the add button is clicked. Will add new Items to the items adapter.
+     * @param view Auto filled when attached to activity_main.xml
+     */
+    public void onAddButtonClick(View view) {
+        Item toAdd = new Item("fuck " + (itemsAdapter.getCount() + 1), "hey it works");
+        itemsAdapter.add(toAdd);
+    }
+
+    /**
+     * To run when the remove button is clicked. Will remove the last item from the adapter.
+     * @param view Auto filled when attached to activity_main.xml
+     */
+    public void onRemoveButtonClick(View view) {
+        itemsAdapter.remove(itemsAdapter.getItem(itemsAdapter.getCount() - 1));
     }
 }

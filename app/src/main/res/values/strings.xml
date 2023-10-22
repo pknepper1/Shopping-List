@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Shopping List</string>
     <string name="on_click_change">What\'s Up Bitches!</string>
-    <string name="button">Click Me!</string>
+    <string name="addButton">Add</string>
+    <string name="removeButton">Remove</string>
 </resources>

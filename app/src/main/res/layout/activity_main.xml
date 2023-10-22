@@ -1,30 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:orientation="vertical"
-    android:clipToPadding="false"
-    tools:context=".MainActivity">
-    <include layout="@layout/item"/>
-    <ListView
-        android:id="@+id/lvItems"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-    </ListView>
-    <TextView
-        android:id="@+id/helloText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/helloButton"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="100dp">
+
+        <include layout="@layout/item"/>
+
+        <ListView
+            android:id="@+id/lvItems"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+
+        <TextView
+            android:id="@+id/helloText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onHelloButtonClick"
-        android:text="@string/button"
-        android:textColor="?android:colorPrimary" />
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:gravity="bottom">
 
-</LinearLayout>
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onAddButtonClick"
+            android:text="@string/addButton"
+            android:textColor="?android:colorPrimary" />
+
+        <Button
+            android:id="@+id/removeButton"
+            android:layout_height="wrap_content"
+            android:onClick="onRemoveButtonClick"
+            android:text="@string/removeButton"
+            android:layout_width="fill_parent"
+            android:textColor="?android:colorPrimary" />
+
+    </LinearLayout>
+
+</RelativeLayout>
