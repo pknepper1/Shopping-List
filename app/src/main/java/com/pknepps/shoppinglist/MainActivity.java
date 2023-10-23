@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         removeButton = findViewById(R.id.removeButton);
         // sets itemsAdapter to an empty list and attaches a list view to it
         itemsAdapter = new ItemsAdapter(this);
-        itemsAdapter.add(new Item(this));
+        itemsAdapter.add(new Item());
         ListView listView = (ListView) findViewById(R.id.lvItems);
         listView.setAdapter(itemsAdapter);
     }
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view Auto filled when attached to activity_main.xml
      */
     public void onAddButtonClick(View view) {
-        itemsAdapter.add(new Item(this));
+        itemsAdapter.add(new Item());
     }
 
     /**
@@ -56,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
      * @param view Auto filled when attached to activity_main.xml
      */
     public void onRemoveButtonClick(View view) {
-        if (itemsAdapter.getCount() <= 0) {
-            return;
-        }
-        itemsAdapter.remove(itemsAdapter.getItem(itemsAdapter.getCount() - 1));
+        itemsAdapter.pop();
     }
 }

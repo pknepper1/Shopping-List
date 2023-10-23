@@ -8,30 +8,28 @@ import android.widget.EditText;
  */
 public class Item {
     /** The name of the item. */
-    private EditText name;
+    private String name;
     /** The price of the item. */
-    private EditText price;
+    private double price;
 
-    public Item(Context context, String name, String price) {
-        this.name = new EditText(context);
-        this.price = new EditText(context);
-        this.name.append(name);
-        this.price.append(price);
+    public Item(String name, String price) {
+        this.name = name;
+        this.price = Double.parseDouble(price);
     }
 
-    public Item(Context context, String name) {
-        this(context, name, "");
+    public Item(String name) {
+        this(name, "0.00");
     }
 
-    public Item(Context context) {
-        this(context, "");
+    public Item() {
+        this("");
     }
 
-    public EditText getName() {
+    public String getName() {
         return name;
     }
 
-    public EditText getPrice() {
+    public double getPrice() {
         return price;
     }
 }

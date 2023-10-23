@@ -1,11 +1,13 @@
 package com.pknepps.shoppinglist;
 
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.*;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -13,11 +15,15 @@ import java.util.ArrayList;
  * This is an adapter that stores and displays Items in process. It is a customization of the ArrayAdapter class that works with this app.
  */
 public class ItemsAdapter extends ArrayAdapter<Item> {
+
+    ArrayList<Item> items;
+
     /**
      * @param context the object to display in. (usually the current object)
      */
     public ItemsAdapter(Context context) {
         super(context, 0);
+        items = new ArrayList<>();
     }
 
     /**
@@ -38,18 +44,36 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
-        Item item = getItem(position);
+        Item item = items.get(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
         }
         // Lookup view for data population
-        TextView itemName = (TextView) convertView.findViewById(R.id.itemName);
-        TextView itemValue = (TextView) convertView.findViewById(R.id.itemPrice);
+        EditText itemName = convertView.findViewById(R.id.itemName);
+        EditText itemValue = convertView.findViewById(R.id.itemPrice);
         // Populate the data into the template view using the data object
-        itemName.setText(item.getName().getText());
-        itemValue.setText(item.getPrice().getText());
-
+        assert item != null;
+        if (!item.getName().equals("")) {
+            itemName.setText(item.getName());
+        }
+        if (item.getPrice() != 0) {
+            itemValue.setText(String.valueOf(item.getPrice()));
+        }
         return convertView;
+    }
+
+    @Override
+    public void add(@Nullable Item object) {
+        super.add(object);
+        items.add(object);
+    }
+
+    public void pop() {
+        if (getCount() <= 0) {
+            return;
+        }
+        remove(getItem(getCount() - 1));
+        items.remove(getCount());
     }
 }
