@@ -1,11 +1,12 @@
 package com.pknepps.shoppinglist;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.*;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -18,12 +19,18 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
 
     ArrayList<Item> items;
 
+    Context context;
+
+    ArrayList<TextWatcher> nameChanges;
+
     /**
      * @param context the object to display in. (usually the current object)
      */
     public ItemsAdapter(Context context) {
         super(context, 0);
         items = new ArrayList<>();
+        this.context = context;
+        nameChanges = new ArrayList<>();
     }
 
     /**
@@ -52,11 +59,30 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
         // Lookup view for data population
         EditText itemName = convertView.findViewById(R.id.itemName);
         EditText itemValue = convertView.findViewById(R.id.itemPrice);
-        // Populate the data into the template view using the data object
-        assert item != null;
-        if (!item.getName().equals("")) {
-            itemName.setText(item.getName());
+        if (position < nameChanges.size()) {
+            itemName.removeTextChangedListener(nameChanges.get(position));
         }
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                System.out.println("bf");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                System.out.println("on");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                System.out.println("af");
+            }
+        };
+        itemName.addTextChangedListener(watcher);
+        nameChanges.add(position, watcher);
+        // Populate the data into the template view using the data object
+        item.setName(itemName.getText().toString());
+        itemName.setText(item.getName());
         if (item.getPrice() != 0) {
             itemValue.setText(String.valueOf(item.getPrice()));
         }
@@ -64,16 +90,15 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
     }
 
     @Override
-    public void add(@Nullable Item object) {
-        super.add(object);
-        items.add(object);
+    public void add(@Nullable Item item) {
+        super.add(item);
+        items.add(item);
     }
 
     public void pop() {
-        if (getCount() <= 0) {
-            return;
+        if (getCount() > 1) {
+            remove(getItem(getCount() - 1));
+            items.remove(items.size() - 1);
         }
-        remove(getItem(getCount() - 1));
-        items.remove(getCount());
     }
 }

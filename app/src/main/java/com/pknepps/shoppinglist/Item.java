@@ -25,6 +25,14 @@ public class Item {
         this("");
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(String price) {
+        this.price = Double.parseDouble(price);
+    }
+
     public String getName() {
         return name;
     }
