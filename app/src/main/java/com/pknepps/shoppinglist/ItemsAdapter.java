@@ -25,9 +25,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     ArrayList<TextWatcher> nameChanges;
 
     /**
-     * @param context the object to display in. (usually the current object)
+     * Initializes a new ItemsAdapter
      */
-    public ItemsAdapter( {
+    public ItemsAdapter() {
         super();
         items = new ArrayList<>();
         nameChanges = new ArrayList<>();
@@ -117,20 +117,27 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         }
     }
 
+    /** Create new views (invoked by the layout manager) */
     @NonNull
     @Override
     public ItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        // Create a new view, which defines the UI of the list item
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item, parent, false);
+
+        return new ViewHolder(view);
     }
 
+    /** Replace the contents of a view (invoked by the layout manager) */
     @Override
     public void onBindViewHolder(@NonNull ItemsAdapter.ViewHolder holder, int position) {
 
     }
 
+    /** Returns the number of elements in this adapter */
     @Override
     public int getItemCount() {
-        return 0;
+        return items.size();
     }
 
     /**
