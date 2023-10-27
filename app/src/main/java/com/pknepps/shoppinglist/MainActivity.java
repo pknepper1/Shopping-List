@@ -1,6 +1,8 @@
 package com.pknepps.shoppinglist;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,16 +13,17 @@ import java.lang.reflect.Array;
 
 public class MainActivity extends AppCompatActivity {
 
-    /** Button which will add a new row to the array */
-    Button addButton;
+    /** Button which will add a new row to the array. */
+    private Button addButton;
 
-    Button removeButton;
+    /** Button which will remove the last row in the array. */
+    private Button removeButton;
 
-    /** True if button has been clicked an odd number of times */
-    boolean oddClick;
+    /** Array of of all items in the shopping list */
+    private ArrayList<Item> items;
 
     /** The adapter that will display the items in from an array. */
-    ItemsAdapter itemsAdapter;
+    private ItemsAdapter itemsAdapter;
 
     /**
      * Called when app is initialized.
@@ -37,10 +40,13 @@ public class MainActivity extends AppCompatActivity {
         addButton = findViewById(R.id.addButton);
         removeButton = findViewById(R.id.removeButton);
         // sets itemsAdapter to an empty list and attaches a list view to it
-        itemsAdapter = new ItemsAdapter(this);
-        itemsAdapter.add(new Item());
-        ListView listView = (ListView) findViewById(R.id.lvItems);
-        listView.setAdapter(itemsAdapter);
+        items = new ArrayList<>();
+        items.add(new Item());
+        itemsAdapter = new ItemsAdapter(items);
+        itemsAdapter.getItems().add(new Item());
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rcItems);
+        recyclerView.setAdapter(itemsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     /**
