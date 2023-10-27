@@ -17,6 +17,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     /** The arraylist that holds the displayed items */
     private final ArrayList<Item> items;
 
+    private final ArrayList<ViewHolder> views;
+
     /** The number of elements in items */
     int size;
 
@@ -26,6 +28,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     public ItemsAdapter(ArrayList<Item> items) {
         super();
         this.items = items;
+        views = new ArrayList<>();
         size = items.size();
     }
 
@@ -36,7 +39,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item, parent, false);
-        return new ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view);
+        views.add(holder);
+        return holder;
     }
 
     /** Replace the contents of a view (invoked by the layout manager) */
@@ -66,6 +71,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     }
 
     /**
+     * Gets the arrayList of ViewHolders.
+     * @return The arrayList of ViewHolders.
+     */
+    public ArrayList<ViewHolder> getViews() {
+        return views;
+    }
+
+    /**
      * Adds new item to the end of items.
      * @param item The item to add.
      */
@@ -82,6 +95,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             return;
         }
         items.remove(--size);
+        views.remove(size);
         notifyItemRemoved(size);
     }
 
@@ -95,6 +109,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             return null;
         }
         Item removed = items.remove(position);
+        views.remove(position);
         notifyItemRemoved(position);
         size--;
         return removed;
@@ -122,6 +137,22 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             super(view);
             itemName = view.findViewById(R.id.itemName);
             itemPrice = view.findViewById(R.id.itemPrice);
+            itemName.setOnKeyListener(new View.OnKeyListener() {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    // If the event is a key-down event on the "enter" button
+                    int position = getAdapterPosition();
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                            (keyCode == KeyEvent.KEYCODE_ENTER &&
+                            itemName.getText().toString().equals("") &&
+                            position < ItemsAdapter.this.size - 1)) {
+                        // Perform action on key press
+                        ItemsAdapter.this.remove(position);
+                        ItemsAdapter.this.getViews().get(position).getItemName().requestFocus();
+                        return true;
+                    }
+                    return false;
+                }
+            });
             nameWatcher = new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -137,10 +168,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if (getAdapterPosition() < ItemsAdapter.this.getItemCount() - 1 &&
-                            s.toString().equals("")) {
-                        remove(getAdapterPosition());
-                    }
+
                 }
             };
             itemName.addTextChangedListener(nameWatcher);
