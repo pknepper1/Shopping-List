@@ -73,23 +73,6 @@
         android:orientation="vertical"
         android:layout_gravity="bottom"
         android:gravity="bottom">
-
-        <Button
-            android:id="@+id/addButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onAddButtonClick"
-            android:text="@string/addButton"
-            android:textColor="?android:colorPrimary" />
-
-        <Button
-            android:id="@+id/removeButton"
-            android:layout_height="wrap_content"
-            android:onClick="onRemoveButtonClick"
-            android:text="@string/removeButton"
-            android:layout_width="fill_parent"
-            android:textColor="?android:colorPrimary" />
-
     </LinearLayout>
 
 </RelativeLayout>

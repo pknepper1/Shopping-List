@@ -82,14 +82,29 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             return;
         }
         items.remove(--size);
-        notifyItemChanged(size);
+        notifyItemRemoved(size);
+    }
+
+    /**
+     * Removes the item at the specified position from the list.
+     * @param position the position of the item to remove.
+     * @return The item removed or null if position is out of bounds..
+     */
+    public Item remove(int position) {
+        if (position < 0 || position >= size) {
+            return null;
+        }
+        Item removed = items.remove(position);
+        notifyItemRemoved(position);
+        size--;
+        return removed;
     }
 
     /**
      * Provide a reference to the items in the item.xml view
      * (custom ViewHolder)
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         /** The EditText attached to the itemName. */
         private final EditText itemName;
 
@@ -115,12 +130,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                    if (count > 0 && getAdapterPosition() == ItemsAdapter.this.getItemCount() - 1) {
+                        ItemsAdapter.this.push(new Item());
+                    }
                 }
 
                 @Override
                 public void afterTextChanged(Editable s) {
-
+                    if (getAdapterPosition() < ItemsAdapter.this.getItemCount() - 1 &&
+                            s.toString().equals("")) {
+                        remove(getAdapterPosition());
+                    }
                 }
             };
             itemName.addTextChangedListener(nameWatcher);

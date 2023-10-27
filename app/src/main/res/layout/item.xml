@@ -18,7 +18,8 @@
             android:textSize="20sp"
             android:textColor="#505050"
             android:hint="@string/name_hint"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:singleLine="true"/>
 
         <View
             android:layout_width="2dp"

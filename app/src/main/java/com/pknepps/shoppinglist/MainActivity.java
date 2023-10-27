@@ -12,18 +12,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    /** Button which will add a new row to the array */
-    Button addButton;
-
-    /** Button which will remove the last row to the array */
-    Button removeButton;
-
 
     /** The adapter that will display the items in from an array. */
     ItemsAdapter itemsAdapter;
 
     /** The array of items to display and edit in the recyclerView */
     ArrayList<Item> items;
+
+    /** The total of the price all items in the list */
+    double total;
 
     /**
      * Called when app is initialized.
@@ -36,31 +33,22 @@ public class MainActivity extends AppCompatActivity {
         // loads activity_main.xml
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // loads buttons
-        addButton = findViewById(R.id.addButton);
-        removeButton = findViewById(R.id.removeButton);
-        // sets itemsAdapter to an empty list and attaches a recycler view to it
+        // loads the shopping list
         items = new ArrayList<>();
         items.add(new Item());
+        // sets itemsAdapter to teh locally saved shopping list and attaches a recycler view to it
         itemsAdapter = new ItemsAdapter(items);
         RecyclerView rcView = findViewById(R.id.rcItems);
         rcView.setAdapter(itemsAdapter);
         rcView.setLayoutManager(new LinearLayoutManager(this));
+        // sets total
+        total = 0;
     }
 
     /**
-     * To run when the add button is clicked. Will add new Items to the items adapter.
-     * @param view Auto filled when attached to activity_main.xml
+     * Sums the values of all prices in the list and changes the displayed value to match.
      */
-    public void onAddButtonClick(View view) {
-        itemsAdapter.push(new Item());
-    }
+    public void recalculateTotal() {
 
-    /**
-     * To run when the remove button is clicked. Will remove the last item from the adapter.
-     * @param view Auto filled when attached to activity_main.xml
-     */
-    public void onRemoveButtonClick(View view) {
-        itemsAdapter.pop();
     }
 }
