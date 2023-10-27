@@ -1,55 +1,129 @@
 package com.pknepps.shoppinglist;
 
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.view.*;
-
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 /**
  * This is an adapter that stores and displays Items in process. It is a customization of the ArrayAdapter class that works with this app.
  */
-public class ItemsAdapter extends ArrayAdapter<Item> {
+public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
+
+    /** The arraylist that holds the displayed items */
+    private ArrayList<Item> items;
+
+    /** The number of elements in items */
+    int size;
+
     /**
-     * @param context the object to display in. (usually the current object)
+     * Initializes a new ItemsAdapter
      */
-    public ItemsAdapter(Context context) {
-        super(context, 0);
+    public ItemsAdapter(ArrayList<Item> items) {
+        super();
+        this.items = items;
+        size = items.size();
+    }
+
+    /** Create new views (invoked by the layout manager) */
+    @NonNull
+    @Override
+    public ItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Create a new view, which defines the UI of the list item
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    /** Replace the contents of a view (invoked by the layout manager) */
+    @Override
+    public void onBindViewHolder(@NonNull ItemsAdapter.ViewHolder holder, int position) {
+        holder.getItemName().setText(items.get(position).getName());
+        holder.getItemPrice().setText(String.format(Double.toString(
+                items.get(position).getPrice())));
+    }
+
+    /** Returns the number of elements in this adapter */
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public void add(Item item) {
+        items.add(item);
+        notifyItemChanged(size++);
+    }
+
+    public void pop() {
+        if (items.size() <= 1) {
+            return;
+        }
+        items.remove(items.size() - 1);
+        notifyItemChanged(size--);
     }
 
     /**
-     * Returns a usable view containing all Items in this array. This view is displayable from a
-     * .xml file.
-     * @param position The position of the item within the adapter's data set of the item whose view
-     *        we want.
-     * @param convertView The old view to reuse, if possible. Note: You should check that this view
-     *        is non-null and of an appropriate type before using. If it is not possible to convert
-     *        this view to display the correct data, this method can create a new view.
-     *        Heterogeneous lists can specify their number of view types, so that this View is
-     *        always of the right type (see {@link #getViewTypeCount()} and
-     *        {@link #getItemViewType(int)}).
-     * @param parent The parent that this view will eventually be attached to
-     * @return a usable view containing all Items in this array.
+     * Provide a reference to the items in the item.xml view
+     * (custom ViewHolder)
      */
-    @NonNull
-    @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        // Get the data item for this position
-        Item item = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
-        }
-        // Lookup view for data population
-        TextView itemName = (TextView) convertView.findViewById(R.id.itemName);
-        TextView itemValue = (TextView) convertView.findViewById(R.id.itemPrice);
-        // Populate the data into the template view using the data object
-        itemName.setText(item.getName().getText());
-        itemValue.setText(item.getPrice().getText());
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        /** The EditText attached to the itemName. */
+        private final EditText itemName;
 
-        return convertView;
+        /** The EditText attached to the item price. */
+        private final EditText itemPrice;
+
+        /** The TextWatcher attached to itemName. */
+        private final TextWatcher nameWatcher;
+
+        /**
+         * Initializes a new ViewHolder with the items.xml layout.
+         * @param view The parent view to put this ViewHolder in.
+         */
+        public ViewHolder(View view) {
+            super(view);
+            itemName = view.findViewById(R.id.itemName);
+            itemPrice = view.findViewById(R.id.itemPrice);
+            nameWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            };
+            itemName.addTextChangedListener(nameWatcher);
+        }
+
+        /** Getter for NameWatcher. */
+        public TextWatcher getNameWatcher() {
+            return nameWatcher;
+        }
+
+        /** Getter for the EditText ItemName. */
+        public EditText getItemName() {
+            return itemName;
+        }
+
+        /** Getter for the EditText ItemPrice. */
+        public EditText getItemPrice() {
+            return itemPrice;
+        }
     }
 }

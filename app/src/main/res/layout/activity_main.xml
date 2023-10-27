@@ -58,11 +58,11 @@
 
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/lvItems"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcItems"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-        </ListView>
+        </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
             android:id="@+id/helloText"

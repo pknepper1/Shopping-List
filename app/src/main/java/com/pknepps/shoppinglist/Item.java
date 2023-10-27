@@ -1,38 +1,33 @@
 package com.pknepps.shoppinglist;
-
-import android.content.Context;
-import android.widget.EditText;
 /**
  * This class models a item to go into the shopping list. It has fields for the item name and
  * price.
  */
 public class Item {
     /** The name of the item. */
-    private EditText name;
+    private String name;
     /** The price of the item. */
-    private EditText price;
+    private Double price;
 
 
-    public Item(Context context, String name, String price) {
-        this.name = new EditText(context);
-        this.price = new EditText(context);
-        this.name.append(name);
-        this.price.append(price);
+    public Item(String name, String price) {
+        this.name = name;
+        this.price = Double.parseDouble(price);
     }
 
-    public Item(Context context, String name) {
-        this(context, name, "");
+    public Item(String name) {
+        this( name, "0.0");
     }
 
-    public Item(Context context) {
-        this(context, "");
+    public Item() {
+        this("");
     }
 
-    public EditText getName() {
+    public String getName() {
         return name;
     }
 
-    public EditText getPrice() {
+    public Double getPrice() {
         return price;
     }
 }

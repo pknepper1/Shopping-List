@@ -1,12 +1,13 @@
 package com.pknepps.shoppinglist;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
 
     /** The adapter that will display the items in from an array. */
     ItemsAdapter itemsAdapter;
+
+    /** The array of items to display and edit in the recyclerView */
+    ArrayList<Item> items;
 
     /**
      * Called when app is initialized.
@@ -35,12 +39,11 @@ public class MainActivity extends AppCompatActivity {
         addButton = findViewById(R.id.addButton);
         removeButton = findViewById(R.id.removeButton);
         // sets itemsAdapter to an empty list and attaches a list view to it
-        itemsAdapter = new ItemsAdapter(this);
-        Item firstItem = new Item(this);
-        firstItem.getName().addTextChangedListener(new NameWatcher(this, itemsAdapter, firstItem));
-        itemsAdapter.add(firstItem);
-        ListView listView = findViewById(R.id.lvItems);
-        listView.setAdapter(itemsAdapter);
+        items = new ArrayList<>();
+        itemsAdapter = new ItemsAdapter(items);
+        itemsAdapter.add(new Item());
+        RecyclerView rcView = findViewById(R.id.rcItems);
+        rcView.setAdapter(itemsAdapter);
     }
 
     /**
@@ -48,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view Auto filled when attached to activity_main.xml
      */
     public void onAddButtonClick(View view) {
-        Item newItem = new Item(this);
-        newItem.getName().addTextChangedListener(new NameWatcher(this, itemsAdapter, newItem));
-        itemsAdapter.add(new Item(this));
+        itemsAdapter.add(new Item());
     }
 
     /**
@@ -58,9 +59,6 @@ public class MainActivity extends AppCompatActivity {
      * @param view Auto filled when attached to activity_main.xml
      */
     public void onRemoveButtonClick(View view) {
-        if (itemsAdapter.getCount() <= 1) {
-            return;
-        }
-        itemsAdapter.remove(itemsAdapter.getItem(itemsAdapter.getCount() - 1));
+        itemsAdapter.pop();
     }
 }
