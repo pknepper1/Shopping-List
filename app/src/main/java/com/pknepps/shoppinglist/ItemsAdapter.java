@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
     /** The arraylist that holds the displayed items */
-    private ArrayList<Item> items;
+    private final ArrayList<Item> items;
 
     /** The number of elements in items */
     int size;
@@ -43,8 +43,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ItemsAdapter.ViewHolder holder, int position) {
         holder.getItemName().setText(items.get(position).getName());
-        holder.getItemPrice().setText(String.format(Double.toString(
-                items.get(position).getPrice())));
+        String price = Double.toString(items.get(position).getPrice());
+        if (price.equals("0.0")) {
+            holder.getItemPrice().setText("");
+        } else {
+            holder.getItemPrice().setText(price);
+        }
     }
 
     /** Returns the number of elements in this adapter */
@@ -53,21 +57,32 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         return items.size();
     }
 
+    /**
+     * Gets the arrayList of items.
+     * @return The arrayList of items.
+     */
     public ArrayList<Item> getItems() {
         return items;
     }
 
-    public void add(Item item) {
+    /**
+     * Adds new item to the end of items.
+     * @param item The item to add.
+     */
+    public void push(Item item) {
         items.add(item);
         notifyItemChanged(size++);
     }
 
+    /**
+     * Removes the last item from items.
+     */
     public void pop() {
         if (items.size() <= 1) {
             return;
         }
-        items.remove(items.size() - 1);
-        notifyItemChanged(size--);
+        items.remove(--size);
+        notifyItemChanged(size);
     }
 
     /**

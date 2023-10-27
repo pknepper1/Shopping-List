@@ -1,6 +1,7 @@
 package com.pknepps.shoppinglist;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -38,12 +39,13 @@ public class MainActivity extends AppCompatActivity {
         // loads buttons
         addButton = findViewById(R.id.addButton);
         removeButton = findViewById(R.id.removeButton);
-        // sets itemsAdapter to an empty list and attaches a list view to it
+        // sets itemsAdapter to an empty list and attaches a recycler view to it
         items = new ArrayList<>();
+        items.add(new Item());
         itemsAdapter = new ItemsAdapter(items);
-        itemsAdapter.add(new Item());
         RecyclerView rcView = findViewById(R.id.rcItems);
         rcView.setAdapter(itemsAdapter);
+        rcView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     /**
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view Auto filled when attached to activity_main.xml
      */
     public void onAddButtonClick(View view) {
-        itemsAdapter.add(new Item());
+        itemsAdapter.push(new Item());
     }
 
     /**
