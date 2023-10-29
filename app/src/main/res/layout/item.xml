@@ -47,7 +47,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:background="@drawable/round_button"
-            android:text="@string/removeButton" />
+            android:text="@string/removeButton"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

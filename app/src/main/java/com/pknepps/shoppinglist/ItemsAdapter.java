@@ -113,7 +113,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     /**
      * Removes the item at the specified position from the list.
      * @param position the position of the item to remove.
-     * @return The item removed or null if position is out of bounds..
      */
     public void remove(int position) {
         if (position < 0 || position >= size) {
@@ -189,6 +188,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (count > 0 && getAdapterPosition() == ItemsAdapter.this.getItemCount() - 1) {
                         ItemsAdapter.this.push(new Item());
+                        removeButton.setVisibility(View.VISIBLE);
                     }
                 }
 
