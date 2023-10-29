@@ -1,10 +1,14 @@
 package com.pknepps.shoppinglist;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.view.*;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -14,9 +18,13 @@ import java.util.ArrayList;
  */
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
+    /** The activity holding this adapter */
+    Context context;
+
     /** The arraylist that holds the displayed items */
     private final ArrayList<Item> items;
 
+    /** Keeps track of all ViewHolders in this adapter*/
     private final ArrayList<ViewHolder> views;
 
     /** The number of elements in items */
@@ -25,8 +33,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     /**
      * Initializes a new ItemsAdapter
      */
-    public ItemsAdapter(ArrayList<Item> items) {
+    public ItemsAdapter(Context context, ArrayList<Item> items) {
         super();
+        this.context = context;
         this.items = items;
         views = new ArrayList<>();
         size = items.size();
@@ -116,6 +125,24 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     }
 
     /**
+     * Sums the values of all prices in the list and changes the displayed value to match.
+     */
+    public void recalculateTotal() {
+        final double TAX = 0.07;
+        double total = 0;
+        ArrayList<Item> items = getItems();
+        for (Item item : items) {
+            total += item.getPrice();
+        }
+        ((TextView) ((AppCompatActivity) context).findViewById(R.id.total))
+                .setText(String.format(Double.toString(total)));
+        ((TextView) ((AppCompatActivity) context).findViewById(R.id.tax))
+                .setText(String.format(Double.toString(total * TAX)));
+        ((TextView) ((AppCompatActivity) context).findViewById(R.id.totalTax))
+                .setText(String.format(Double.toString(total + (total * TAX))));
+    }
+
+    /**
      * Provide a reference to the items in the item.xml view
      * (custom ViewHolder)
      */
@@ -142,9 +169,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                     // If the event is a key-down event on the "enter" button
                     int position = getAdapterPosition();
                     if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                            (keyCode == KeyEvent.KEYCODE_ENTER &&
+                            (keyCode == KeyEvent.KEYCODE_ENTER) &&
                             itemName.getText().toString().equals("") &&
-                            position < ItemsAdapter.this.size - 1)) {
+                            (position < ItemsAdapter.this.size - 1)) {
                         // Perform action on key press
                         ItemsAdapter.this.remove(position);
                         ItemsAdapter.this.getViews().get(position).getItemName().requestFocus();
@@ -172,6 +199,20 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 }
             };
             itemName.addTextChangedListener(nameWatcher);
+            itemPrice.setOnKeyListener(new View.OnKeyListener() {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    // If the event is a key-down event on the "enter" button
+                    int position = getAdapterPosition();
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                            (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        // Records and calculates total cost on pressing enter
+                        items.get(getAdapterPosition()).setPrice(itemPrice.getText().toString());
+                        ItemsAdapter.this.recalculateTotal();
+                        return true;
+                    }
+                    return false;
+                }
+            });
         }
 
         /** Getter for NameWatcher. */

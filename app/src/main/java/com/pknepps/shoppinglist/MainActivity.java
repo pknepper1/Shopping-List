@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    final private double TAX = 0.07;
-
     /** The adapter that will display the items in from an array. */
     private ItemsAdapter itemsAdapter;
 
@@ -32,23 +30,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Item> items = new ArrayList<>();
         items.add(new Item());
         // sets itemsAdapter to teh locally saved shopping list and attaches a recycler view to it
-        itemsAdapter = new ItemsAdapter(items);
+        itemsAdapter = new ItemsAdapter(this, items);
         RecyclerView rcView = findViewById(R.id.rcItems);
         rcView.setAdapter(itemsAdapter);
         rcView.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    /**
-     * Sums the values of all prices in the list and changes the displayed value to match.
-     */
-    public void recalculateTotal() {
-        double total = 0;
-        ArrayList<Item> items = itemsAdapter.getItems();
-        for (Item item : items) {
-            total += item.getPrice();
-        }
-        ((TextView) findViewById(R.id.total)).setText(String.format(Double.toString(total)));
-        ((TextView) findViewById(R.id.tax)).setText(String.format(Double.toString(total * TAX)));
-        ((TextView) findViewById(R.id.totalTax)).setText(String.format(Double.toString(total + (total * TAX))));
     }
 }
