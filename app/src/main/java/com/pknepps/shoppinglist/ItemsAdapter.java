@@ -11,10 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
- * This is an adapter that stores and displays Items in process. It is a customization of the ArrayAdapter class that works with this app.
+ * This is an adapter that stores and displays Items in process.
+ * It is a customization of the ArrayAdapter class that works with the RecyclerView in this app.
  */
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
@@ -31,7 +34,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     int size;
 
     /**
-     * Initializes a new ItemsAdapter
+     * Initializes a new ItemsAdapter.
+     * @param context The activity this ItemsAdapter is being created in.
+     * @param items The items to display through the RecyclerView
      */
     public ItemsAdapter(Context context, ArrayList<Item> items) {
         super();
@@ -41,7 +46,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         size = items.size();
     }
 
-    /** Create new views (invoked by the layout manager) */
+    /**
+     * Create new views (invoked by the layout manager)
+     * @param parent The parent view in which a ViewHolder will be displayed in.
+     * @param viewType The int representation of the type of the view.
+     * @return The ViewHolder which represents an item from items.
+     */
     @NonNull
     @Override
     public ItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,7 +63,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         return holder;
     }
 
-    /** Replace the contents of a view (invoked by the layout manager) */
+    /**
+     * Replace the contents of a view (invoked by the layout manager)
+     * @param holder The ViewHolder to replace the contents of.
+     * @param position The position in the adapter of holder.
+     */
     @Override
     public void onBindViewHolder(@NonNull ItemsAdapter.ViewHolder holder, int position) {
         holder.getItemName().setText(items.get(position).getName());
@@ -65,7 +79,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         }
     }
 
-    /** Returns the number of elements in this adapter */
+    /**
+     * Gets the number of elements in this adapter.
+     * @return the number of elements in this adapter.
+     */
     @Override
     public int getItemCount() {
         return items.size();
@@ -147,6 +164,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
      * (custom ViewHolder)
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         /** The EditText attached to the itemName. */
         private final EditText itemName;
 
@@ -156,6 +174,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         /** The TextWatcher attached to itemName. */
         private final TextWatcher nameWatcher;
 
+        /** The TextWatcher attached to itemPrice. */
+        private final TextWatcher priceWatcher;
+
         /**
          * Initializes a new ViewHolder with the items.xml layout.
          * @param view The parent view to put this ViewHolder in.
@@ -164,7 +185,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             super(view);
             itemName = view.findViewById(R.id.itemName);
             itemPrice = view.findViewById(R.id.itemPrice);
+
+            /* Creates a listener for when the enter key is pressed,
+               removing this item from the adapter */
             itemName.setOnKeyListener(new View.OnKeyListener() {
+                /*
+                 * When enter is pressed, and when the EditText is empty and not the last item,
+                 * removes it from the adapter.
+                 */
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     // If the event is a key-down event on the "enter" button
                     int position = getAdapterPosition();
@@ -180,12 +208,20 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                     return false;
                 }
             });
+
+            // Sets a watcher for the item name EditText which will cause new items to be added.
             nameWatcher = new TextWatcher() {
+
+                // Unused
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                 }
 
+                /*
+                 * While text is being changed, if this is the last item in the adaper, add a new
+                 * item.
+                 */
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (count > 0 && getAdapterPosition() == ItemsAdapter.this.getItemCount() - 1) {
@@ -193,39 +229,72 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                     }
                 }
 
+                /*
+                 * After text is changed, save it to the corresponding item in items.
+                 */
                 @Override
                 public void afterTextChanged(Editable s) {
-
+                    items.get(getAdapterPosition()).setName(itemName.getText().toString());
                 }
             };
             itemName.addTextChangedListener(nameWatcher);
-            itemPrice.setOnKeyListener(new View.OnKeyListener() {
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    // If the event is a key-down event on the "enter" button
-                    int position = getAdapterPosition();
-                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                            (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                        // Records and calculates total cost on pressing enter
-                        items.get(getAdapterPosition()).setPrice(itemPrice.getText().toString());
-                        ItemsAdapter.this.recalculateTotal();
-                        return true;
-                    }
-                    return false;
+
+            // sets up a watcher for the price EditText which will cause total to recalculate.
+            priceWatcher = new TextWatcher() {
+
+                // Unused
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
                 }
-            });
+
+                // Unused
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                /*
+                 * Saves the price to the corresponding item in items, then recalculates the
+                 * price totals
+                 */
+                @Override
+                public void afterTextChanged(Editable s) {
+                    items.get(getAdapterPosition()).setPrice(itemPrice.getText().toString());
+                    ItemsAdapter.this.recalculateTotal();
+                }
+            };
+            itemPrice.addTextChangedListener(priceWatcher);
         }
 
-        /** Getter for NameWatcher. */
+        /**
+         * Getter for nameWatcher.
+         * @return The nameWatcher of itemName, the EditText which contains the item name.
+         */
         public TextWatcher getNameWatcher() {
             return nameWatcher;
         }
 
-        /** Getter for the EditText ItemName. */
+        /**
+         * Getter for priceWatcher.
+         * @return The priceWatcher of itemPrice, the EditText which contains the item price.
+         */
+        public TextWatcher getPriceWatcher() {
+            return priceWatcher;
+        }
+
+        /**
+         * Getter for the EditText ItemName.
+         * @return The EditText which contains the item name.
+         */
         public EditText getItemName() {
             return itemName;
         }
 
-        /** Getter for the EditText ItemPrice. */
+        /**
+         * Getter for the EditText ItemPrice.
+         * @return The EditText which contains the item price.
+         */
         public EditText getItemPrice() {
             return itemPrice;
         }

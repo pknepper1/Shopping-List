@@ -10,6 +10,10 @@ import android.widget.*;
 
 import java.util.ArrayList;
 
+/**
+ * This is the main activity of the app, which is instantiated and ran automatically via the
+ * Android Main Looper Thread.
+ */
 public class MainActivity extends AppCompatActivity {
 
     /** The adapter that will display the items in from an array. */
