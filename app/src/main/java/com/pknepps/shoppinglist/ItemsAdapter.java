@@ -1,5 +1,6 @@
 package com.pknepps.shoppinglist;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -142,6 +143,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     /**
      * Sums the values of all prices in the list and changes the displayed value to match.
      */
+    @SuppressLint("DefaultLocale")
     public void recalculateTotal() {
         final double TAX = 0.07;
         double total = 0;
@@ -150,11 +152,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             total += item.getPrice();
         }
         ((TextView) ((AppCompatActivity) context).findViewById(R.id.total))
-                .setText(String.format(Double.toString(total)));
+                .setText(String.format("$%.2f", total));
         ((TextView) ((AppCompatActivity) context).findViewById(R.id.tax))
-                .setText(String.format(Double.toString(total * TAX)));
+                .setText(String.format("$%.2f", total * TAX));
         ((TextView) ((AppCompatActivity) context).findViewById(R.id.totalTax))
-                .setText(String.format(Double.toString(total + (total * TAX))));
+                .setText(String.format("$%.2f", total + (total * TAX)));
     }
 
     /**
