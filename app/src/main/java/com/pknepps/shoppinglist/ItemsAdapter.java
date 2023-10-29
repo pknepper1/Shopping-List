@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.Button;
 import android.widget.EditText;
 import android.view.*;
 import android.widget.TextView;
@@ -26,9 +27,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     /** The arraylist that holds the displayed items */
     private final ArrayList<Item> items;
 
-    /** Keeps track of all ViewHolders in this adapter*/
-    private final ArrayList<ViewHolder> views;
-
     /** The number of elements in items */
     private int size;
 
@@ -41,7 +39,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         super();
         this.context = context;
         this.items = items;
-        views = new ArrayList<>();
         size = items.size();
     }
 
@@ -57,9 +54,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item, parent, false);
-        ViewHolder holder = new ViewHolder(view);
-        views.add(holder);
-        return holder;
+        return new ViewHolder(view);
     }
 
     /**
@@ -96,14 +91,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     }
 
     /**
-     * Gets the arrayList of ViewHolders.
-     * @return The arrayList of ViewHolders.
-     */
-    public ArrayList<ViewHolder> getViews() {
-        return views;
-    }
-
-    /**
      * Adds new item to the end of items.
      * @param item The item to add.
      */
@@ -120,7 +107,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             return;
         }
         items.remove(--size);
-        views.remove(size);
         notifyItemRemoved(size);
     }
 
@@ -129,15 +115,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
      * @param position the position of the item to remove.
      * @return The item removed or null if position is out of bounds..
      */
-    public Item remove(int position) {
+    public void remove(int position) {
         if (position < 0 || position >= size) {
-            return null;
+            return;
         }
-        Item removed = items.remove(position);
-        views.remove(position);
+        items.remove(position);
+        System.out.println("items updated");
         notifyItemRemoved(position);
         size--;
-        return removed;
     }
 
     /**
@@ -185,29 +170,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             super(view);
             itemName = view.findViewById(R.id.itemName);
             itemPrice = view.findViewById(R.id.itemPrice);
-
-            /* Creates a listener for when the enter key is pressed,
-               removing this item from the adapter */
-            /*
-             * When enter is pressed, and when the EditText is empty and not the last item,
-             * removes it from the adapter.
-             */
-            itemName.setOnKeyListener((v, keyCode, event) -> {
-                // If the event is a key-down event on the "enter" button
-                int position = getAdapterPosition();
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER) &&
-                        itemName.getText().toString().equals("") &&
-                        (position < ItemsAdapter.this.size - 1)) {
-                    // Perform action on key press
-                    ItemsAdapter.this.remove(position);
-                    EditText lastItemName = ItemsAdapter.this.getViews()
-                            .get(ItemsAdapter.this.getViews().size() - 1).getItemName();
-                    lastItemName.postDelayed(lastItemName::requestFocus, 100);
-                    return true;
-                }
-                return false;
-            });
+            Button removeButton = view.findViewById(R.id.removeButton);
 
             // Sets a watcher for the item name EditText which will cause new items to be added.
             nameWatcher = new TextWatcher() {
@@ -265,6 +228,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 }
             };
             itemPrice.addTextChangedListener(priceWatcher);
+
+            // Adds a listener to the removeButton which will remove this item
+            // On click, remove this item.
+            removeButton.setOnClickListener(v -> ItemsAdapter.this.remove(
+                    getAdapterPosition() < ItemsAdapter.this.size
+                            ? getAdapterPosition() : size - 1));
         }
 
         /**

@@ -41,12 +41,13 @@
             android:inputType="numberDecimal" />
 
         <Button
+            android:id="@+id/removeButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:background="@drawable/round_button"
-            android:text="@string/removeButton"/>
+            android:text="@string/removeButton" />
 
     </LinearLayout>
 
