@@ -19,7 +19,8 @@
             android:textColor="#505050"
             android:hint="@string/name_hint"
             android:background="@android:color/transparent"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:inputType="textShortMessage"/>
 
         <View
             android:layout_width="2dp"
