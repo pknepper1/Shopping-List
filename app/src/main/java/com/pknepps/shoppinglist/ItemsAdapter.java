@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
     /** The activity holding this adapter */
-    Context context;
+    private Context context;
 
     /** The arraylist that holds the displayed items */
     private final ArrayList<Item> items;
@@ -30,7 +30,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     private final ArrayList<ViewHolder> views;
 
     /** The number of elements in items */
-    int size;
+    private int size;
 
     /**
      * Initializes a new ItemsAdapter.
@@ -84,7 +84,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
      */
     @Override
     public int getItemCount() {
-        return items.size();
+        return size;
     }
 
     /**
@@ -201,7 +201,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                         (position < ItemsAdapter.this.size - 1)) {
                     // Perform action on key press
                     ItemsAdapter.this.remove(position);
-                    ItemsAdapter.this.getViews().get(position).getItemName().requestFocus();
+                    EditText lastItemName = ItemsAdapter.this.getViews()
+                            .get(ItemsAdapter.this.getViews().size() - 1).getItemName();
+                    lastItemName.postDelayed(lastItemName::requestFocus, 100);
                     return true;
                 }
                 return false;

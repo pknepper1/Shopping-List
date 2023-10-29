@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Shopping List</string>
-    <string name="on_click_change">What\'s Up Bitches!</string>
-    <string name="addButton">Add</string>
-    <string name="removeButton">Remove</string>
+    <string name="removeButton">X</string>
     <string name="table_name">Item</string>
     <string name="table_price">Price</string>
     <string name="name_hint">Insert Item Name</string>
