@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 /**
@@ -188,25 +186,23 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             /* Creates a listener for when the enter key is pressed,
                removing this item from the adapter */
-            itemName.setOnKeyListener(new View.OnKeyListener() {
-                /*
-                 * When enter is pressed, and when the EditText is empty and not the last item,
-                 * removes it from the adapter.
-                 */
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    // If the event is a key-down event on the "enter" button
-                    int position = getAdapterPosition();
-                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                            (keyCode == KeyEvent.KEYCODE_ENTER) &&
-                            itemName.getText().toString().equals("") &&
-                            (position < ItemsAdapter.this.size - 1)) {
-                        // Perform action on key press
-                        ItemsAdapter.this.remove(position);
-                        ItemsAdapter.this.getViews().get(position).getItemName().requestFocus();
-                        return true;
-                    }
-                    return false;
+            /*
+             * When enter is pressed, and when the EditText is empty and not the last item,
+             * removes it from the adapter.
+             */
+            itemName.setOnKeyListener((v, keyCode, event) -> {
+                // If the event is a key-down event on the "enter" button
+                int position = getAdapterPosition();
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER) &&
+                        itemName.getText().toString().equals("") &&
+                        (position < ItemsAdapter.this.size - 1)) {
+                    // Perform action on key press
+                    ItemsAdapter.this.remove(position);
+                    ItemsAdapter.this.getViews().get(position).getItemName().requestFocus();
+                    return true;
                 }
+                return false;
             });
 
             // Sets a watcher for the item name EditText which will cause new items to be added.
@@ -219,7 +215,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 }
 
                 /*
-                 * While text is being changed, if this is the last item in the adaper, add a new
+                 * While text is being changed, if this is the last item in the adapter, add a new
                  * item.
                  */
                 @Override
