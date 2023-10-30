@@ -246,6 +246,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             if (position < 0 || position >= size) {
                 position = items.size() - 1;
             }
+            items.get(position).setViewHolder(this);
         }
 
         /**
