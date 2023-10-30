@@ -1,13 +1,10 @@
 package com.pknepps.shoppinglist;
-
-import java.io.Serializable;
-
 /**
  * This class models a item to go into the shopping list. It has fields for the item name and
  * price.
  * @author Preston Knepper
  */
-public class Item implements Serializable {
+public class Item {
 
     /** The viewHolder which represents this item */
     private ItemsAdapter.ViewHolder viewHolder;
@@ -18,6 +15,8 @@ public class Item implements Serializable {
     /** The price of the item. */
     private Double price;
 
+    private boolean removeButtonVisible;
+
     /**
      * Creates a new instance of an Item.
      * @param name The name of the item.
@@ -27,6 +26,7 @@ public class Item implements Serializable {
         this.name = name;
         setPrice(price);
         viewHolder = null;
+        removeButtonVisible = false;
     }
 
     /**
@@ -73,7 +73,7 @@ public class Item implements Serializable {
      * @param price The new price of this item, as a string.
      */
     public void setPrice(String price) {
-        if (price.equals("")) {
+        if (price.equals("") || price.equals(".")) {
             price = "0.00";
         }
         this.price = Double.parseDouble(price);
@@ -96,10 +96,18 @@ public class Item implements Serializable {
     }
 
     /**
-     * Gets a string representation of this item.
-     * @return a string representation of this item.
+     * Gets if the respective remove button should be visible.
+     * @return true if the attached removeButton is visible.
      */
-    public String toString() {
-        return "Name: " + name + "\nPrice:" + price;
+    public boolean isRemoveButtonVisible() {
+        return removeButtonVisible;
+    }
+
+    /**
+     * Sets the associated removeButton visibility.
+     * @param removeButtonVisible The visibility of the respective removeButton. true if visible.
+     */
+    public void setRemoveButtonVisible(boolean removeButtonVisible) {
+        this.removeButtonVisible = removeButtonVisible;
     }
 }

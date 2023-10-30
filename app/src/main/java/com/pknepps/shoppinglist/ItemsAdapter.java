@@ -34,7 +34,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     /**
      * Initializes a new ItemsAdapter.
      * @param context The activity this ItemsAdapter is being created in.
-     * @param items The items to display through the RecyclerView
+     * @param items The items to display through the RecyclerView.
      */
     public ItemsAdapter(Context context, ArrayList<Item> items) {
         super();
@@ -72,6 +72,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         } else {
             holder.getItemPrice().setText(price);
         }
+        holder.getRemoveButton().setVisibility(items.get(position).isRemoveButtonVisible()
+                ? View.VISIBLE : View.INVISIBLE);
     }
 
     /**
@@ -108,12 +110,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         if (position < 0 || position >= size) {
             return;
         }
-        try {
-            items.get(position).getViewHolder().getRemoveButton().setVisibility(View.INVISIBLE);
-        } catch (NullPointerException npe) {
-            System.out.println(
-                    "viewHolder at position " + position + " was null" + npe.getMessage());
-        }
+        items.get(position).setRemoveButtonVisible(false);
         items.remove(position);
         notifyItemRemoved(position);
         size--;
@@ -184,8 +181,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (count > 0 && getAdapterPosition() == ItemsAdapter.this.getItemCount() - 1) {
-                        removeButton.setVisibility(View.VISIBLE);
+                        items.get(getAdapterPosition()).setRemoveButtonVisible(true);
                         ItemsAdapter.this.push(new Item());
+                        ItemsAdapter.this.notifyItemChanged(getAdapterPosition());
                     }
                 }
 
@@ -198,6 +196,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 }
             };
             itemName.addTextChangedListener(nameWatcher);
+
+            // If an edit text is focused, puts the cursor at the end of the line.
+            View.OnFocusChangeListener onFocusChangeListener = (v, hasFocus) -> {
+                if (hasFocus) {
+                    ((EditText) v).setSelection(((EditText) v).getText().length());
+                }
+            };
+            itemName.setOnFocusChangeListener(onFocusChangeListener);
 
             // sets up a watcher for the price EditText which will cause total to recalculate.
             priceWatcher = new TextWatcher() {
@@ -220,11 +226,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                  */
                 @Override
                 public void afterTextChanged(Editable s) {
+                    if (s.toString().equals(".")) {
+                        itemPrice.setText("0.");
+                        itemPrice.setSelection(itemPrice.getText().length());
+                    }
                     items.get(getAdapterPosition()).setPrice(itemPrice.getText().toString());
                     ItemsAdapter.this.recalculateTotal();
                 }
             };
             itemPrice.addTextChangedListener(priceWatcher);
+            itemName.setOnFocusChangeListener(onFocusChangeListener);
 
             // Adds a listener to the removeButton which will remove this item on click.
             removeButton.setOnClickListener(v -> ItemsAdapter.this.remove(
