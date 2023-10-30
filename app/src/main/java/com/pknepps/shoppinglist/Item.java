@@ -9,9 +9,6 @@ import java.io.Serializable;
  */
 public class Item implements Serializable {
 
-    /** The viewHolder which represents this item */
-    private ItemsAdapter.ViewHolder viewHolder;
-
     /** The name of the item. */
     private String name;
 
@@ -28,7 +25,6 @@ public class Item implements Serializable {
     public Item(String name, String price) {
         this.name = name;
         setPrice(price);
-        viewHolder = null;
         removeButtonVisible = false;
     }
 
@@ -80,22 +76,6 @@ public class Item implements Serializable {
             price = "0.00";
         }
         this.price = Double.parseDouble(price);
-    }
-
-    /**
-     * Gets the ViewHolder representing this item.
-     * @return the ViewHolder representing this item.
-     */
-    public ItemsAdapter.ViewHolder getViewHolder() {
-        return viewHolder;
-    }
-
-    /**
-     * Sets the ViewHolder representing this item.
-     * @param viewHolder The ne ViewHolder to represent this item.
-     */
-    public void setViewHolder(ItemsAdapter.ViewHolder viewHolder) {
-        this.viewHolder = viewHolder;
     }
 
     /**
