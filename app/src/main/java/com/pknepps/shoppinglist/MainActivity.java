@@ -9,6 +9,7 @@ import java.util.ArrayList;
 /**
  * This is the main activity of the app, which is instantiated and ran automatically via the
  * Android Main Looper Thread.
+ * @author Preston Knepper
  */
 public class MainActivity extends AppCompatActivity {
 

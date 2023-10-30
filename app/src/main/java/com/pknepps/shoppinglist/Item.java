@@ -2,11 +2,16 @@ package com.pknepps.shoppinglist;
 /**
  * This class models a item to go into the shopping list. It has fields for the item name and
  * price.
+ * @author Preston Knepper
  */
 public class Item {
 
+    /** The viewHolder which represents this item */
+    private ItemsAdapter.ViewHolder viewHolder;
+
     /** The name of the item. */
     private String name;
+
     /** The price of the item. */
     private Double price;
 
@@ -18,6 +23,7 @@ public class Item {
     public Item(String name, String price) {
         this.name = name;
         setPrice(price);
+        viewHolder = null;
     }
 
     /**
@@ -68,5 +74,21 @@ public class Item {
             price = "0.00";
         }
         this.price = Double.parseDouble(price);
+    }
+
+    /**
+     * Gets the ViewHolder representing this item.
+     * @return the ViewHolder representing this item.
+     */
+    public ItemsAdapter.ViewHolder getViewHolder() {
+        return viewHolder;
+    }
+
+    /**
+     * Sets the ViewHolder representing this item.
+     * @param viewHolder The ne ViewHolder to represent this item.
+     */
+    public void setViewHolder(ItemsAdapter.ViewHolder viewHolder) {
+        this.viewHolder = viewHolder;
     }
 }

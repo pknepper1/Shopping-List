@@ -18,11 +18,12 @@ import java.util.ArrayList;
 /**
  * This is an adapter that stores and displays Items in process.
  * It is a customization of the ArrayAdapter class that works with the RecyclerView in this app.
+ * @author Preston Knepper
  */
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
     /** The activity holding this adapter */
-    private Context context;
+    private final Context context;
 
     /** The arraylist that holds the displayed items */
     private final ArrayList<Item> items;
@@ -100,23 +101,18 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     }
 
     /**
-     * Removes the last item from items.
-     */
-    public void pop() {
-        if (items.size() <= 1) {
-            return;
-        }
-        items.remove(--size);
-        notifyItemRemoved(size);
-    }
-
-    /**
      * Removes the item at the specified position from the list.
      * @param position the position of the item to remove.
      */
     public void remove(int position) {
         if (position < 0 || position >= size) {
             return;
+        }
+        try {
+            items.get(position).getViewHolder().getRemoveButton().setVisibility(View.INVISIBLE);
+        } catch (NullPointerException npe) {
+            System.out.println(
+                    "viewHolder at position " + position + " was null" + npe.getMessage());
         }
         items.remove(position);
         System.out.println("items updated");
@@ -161,6 +157,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         /** The TextWatcher attached to itemPrice. */
         private final TextWatcher priceWatcher;
 
+        private final Button removeButton;
+
         /**
          * Initializes a new ViewHolder with the items.xml layout.
          * @param view The parent view to put this ViewHolder in.
@@ -169,7 +167,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             super(view);
             itemName = view.findViewById(R.id.itemName);
             itemPrice = view.findViewById(R.id.itemPrice);
-            Button removeButton = view.findViewById(R.id.removeButton);
+            removeButton = view.findViewById(R.id.removeButton);
 
             // Sets a watcher for the item name EditText which will cause new items to be added.
             nameWatcher = new TextWatcher() {
@@ -187,8 +185,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (count > 0 && getAdapterPosition() == ItemsAdapter.this.getItemCount() - 1) {
-                        ItemsAdapter.this.push(new Item());
                         removeButton.setVisibility(View.VISIBLE);
+                        ItemsAdapter.this.push(new Item());
                     }
                 }
 
@@ -229,11 +227,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             };
             itemPrice.addTextChangedListener(priceWatcher);
 
-            // Adds a listener to the removeButton which will remove this item
-            // On click, remove this item.
+            // Adds a listener to the removeButton which will remove this item on click.
             removeButton.setOnClickListener(v -> ItemsAdapter.this.remove(
                     getAdapterPosition() < ItemsAdapter.this.size
                             ? getAdapterPosition() : size - 1));
+
+            int position = getAdapterPosition();
+            if (position == -1) {
+                position = items.size() - 1;
+            }
+            items.get(position).setViewHolder(this);
         }
 
         /**
@@ -262,10 +265,18 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         /**
          * Getter for the EditText ItemPrice.
-         * @return The EditText which contains the item price.
+         * @return the EditText which contains the item price.
          */
         public EditText getItemPrice() {
             return itemPrice;
+        }
+
+        /**
+         * Getter for the Button removeButton.
+         * @return the button attached to this view.
+         */
+        public Button getRemoveButton() {
+            return removeButton;
         }
     }
 }
