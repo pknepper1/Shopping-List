@@ -15,6 +15,8 @@ public class Item {
     /** The price of the item. */
     private Double price;
 
+    private boolean removeButtonVisible;
+
     /**
      * Creates a new instance of an Item.
      * @param name The name of the item.
@@ -24,6 +26,7 @@ public class Item {
         this.name = name;
         setPrice(price);
         viewHolder = null;
+        removeButtonVisible = false;
     }
 
     /**
@@ -70,7 +73,7 @@ public class Item {
      * @param price The new price of this item, as a string.
      */
     public void setPrice(String price) {
-        if (price.equals("")) {
+        if (price.equals("") || price.equals(".")) {
             price = "0.00";
         }
         this.price = Double.parseDouble(price);
@@ -90,5 +93,21 @@ public class Item {
      */
     public void setViewHolder(ItemsAdapter.ViewHolder viewHolder) {
         this.viewHolder = viewHolder;
+    }
+
+    /**
+     * Gets if the respective remove button should be visible.
+     * @return true if the attached removeButton is visible.
+     */
+    public boolean isRemoveButtonVisible() {
+        return removeButtonVisible;
+    }
+
+    /**
+     * Sets the associated removeButton visibility.
+     * @param removeButtonVisible The visibility of the respective removeButton. true if visible.
+     */
+    public void setRemoveButtonVisible(boolean removeButtonVisible) {
+        this.removeButtonVisible = removeButtonVisible;
     }
 }
