@@ -1,10 +1,13 @@
 package com.pknepps.shoppinglist;
+
+import java.io.Serializable;
+
 /**
  * This class models a item to go into the shopping list. It has fields for the item name and
  * price.
  * @author Preston Knepper
  */
-public class Item {
+public class Item implements Serializable {
 
     /** The viewHolder which represents this item */
     private ItemsAdapter.ViewHolder viewHolder;
@@ -90,5 +93,13 @@ public class Item {
      */
     public void setViewHolder(ItemsAdapter.ViewHolder viewHolder) {
         this.viewHolder = viewHolder;
+    }
+
+    /**
+     * Gets a string representation of this item.
+     * @return a string representation of this item.
+     */
+    public String toString() {
+        return "Name: " + name + "\nPrice:" + price;
     }
 }

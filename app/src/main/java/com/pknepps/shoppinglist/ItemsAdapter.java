@@ -115,7 +115,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                     "viewHolder at position " + position + " was null" + npe.getMessage());
         }
         items.remove(position);
-        System.out.println("items updated");
         notifyItemRemoved(position);
         size--;
     }
@@ -233,7 +232,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                             ? getAdapterPosition() : size - 1));
 
             int position = getAdapterPosition();
-            if (position == -1) {
+            if (position < 0 || position >= size) {
                 position = items.size() - 1;
             }
             items.get(position).setViewHolder(this);
