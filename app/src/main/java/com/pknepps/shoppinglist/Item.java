@@ -9,9 +9,6 @@ import java.io.Serializable;
  */
 public class Item implements Serializable {
 
-    /** The viewHolder which represents this item */
-    private ItemsAdapter.ViewHolder viewHolder;
-
     /** The name of the item. */
     private String name;
 
@@ -28,7 +25,6 @@ public class Item implements Serializable {
     public Item(String name, String price) {
         this.name = name;
         setPrice(price);
-        viewHolder = null;
         removeButtonVisible = false;
     }
 
@@ -83,22 +79,6 @@ public class Item implements Serializable {
     }
 
     /**
-     * Gets the ViewHolder representing this item.
-     * @return the ViewHolder representing this item.
-     */
-    public ItemsAdapter.ViewHolder getViewHolder() {
-        return viewHolder;
-    }
-
-    /**
-     * Sets the ViewHolder representing this item.
-     * @param viewHolder The ne ViewHolder to represent this item.
-     */
-    public void setViewHolder(ItemsAdapter.ViewHolder viewHolder) {
-        this.viewHolder = viewHolder;
-    }
-
-    /**
      * Gets if the respective remove button should be visible.
      * @return true if the attached removeButton is visible.
      */
@@ -112,5 +92,13 @@ public class Item implements Serializable {
      */
     public void setRemoveButtonVisible(boolean removeButtonVisible) {
         this.removeButtonVisible = removeButtonVisible;
+    }
+
+    /**
+     * @return a String representation of this object
+     */
+    public String toString() {
+        return "Name: " + name + " Price: " + price + " removeButtonVisible: " +
+                removeButtonVisible;
     }
 }

@@ -147,12 +147,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         /** The EditText attached to the item price. */
         private final EditText itemPrice;
 
-        /** The TextWatcher attached to itemName. */
-        private final TextWatcher nameWatcher;
-
-        /** The TextWatcher attached to itemPrice. */
-        private final TextWatcher priceWatcher;
-
         private final Button removeButton;
 
         /**
@@ -166,7 +160,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             removeButton = view.findViewById(R.id.removeButton);
 
             // Sets a watcher for the item name EditText which will cause new items to be added.
-            nameWatcher = new TextWatcher() {
+            // Unused
+            /*
+             * While text is being changed, if this is the last item in the adapter, add a new
+             * item.
+             */
+            /*
+             * After text is changed, save it to the corresponding item in items.
+             */
+            TextWatcher nameWatcher = new TextWatcher() {
 
                 // Unused
                 @Override
@@ -206,7 +208,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             itemName.setOnFocusChangeListener(onFocusChangeListener);
 
             // sets up a watcher for the price EditText which will cause total to recalculate.
-            priceWatcher = new TextWatcher() {
+            // Unused
+            // Unused
+            /*
+             * Saves the price to the corresponding item in items, then recalculates the
+             * price totals
+             */
+            TextWatcher priceWatcher = new TextWatcher() {
 
                 // Unused
                 @Override
@@ -241,28 +249,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             removeButton.setOnClickListener(v -> ItemsAdapter.this.remove(
                     getAdapterPosition() < ItemsAdapter.this.size
                             ? getAdapterPosition() : size - 1));
-
-            int position = getAdapterPosition();
-            if (position < 0 || position >= size) {
-                position = items.size() - 1;
-            }
-            items.get(position).setViewHolder(this);
-        }
-
-        /**
-         * Getter for nameWatcher.
-         * @return The nameWatcher of itemName, the EditText which contains the item name.
-         */
-        public TextWatcher getNameWatcher() {
-            return nameWatcher;
-        }
-
-        /**
-         * Getter for priceWatcher.
-         * @return The priceWatcher of itemPrice, the EditText which contains the item price.
-         */
-        public TextWatcher getPriceWatcher() {
-            return priceWatcher;
         }
 
         /**
