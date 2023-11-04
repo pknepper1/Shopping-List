@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // loads the shopping list from file.
-        try (ObjectInputStream savedList = new ObjectInputStream(new FileInputStream(getApplicationContext().getFilesDir().toString() + "/saved_list.ser"))){
+        try (ObjectInputStream savedList = new ObjectInputStream(new FileInputStream(
+                getApplicationContext().getFilesDir().toString() + "/saved_list.ser"))){
             Object input = savedList.readObject();
             if (input instanceof ItemsList) {
                 items = (ItemsList) input;
@@ -55,15 +56,16 @@ public class MainActivity extends AppCompatActivity {
                     items.add(new Item());
                 }
             }
-            // sets itemsAdapter to the locally saved shopping list and attaches a recycler view to it
         } catch (IOException | ClassNotFoundException ioe) {
             System.err.println("Issue writing serialized object:");
             ioe.printStackTrace();
         }
         if (items == null) {
+            // If there is no saved list, make a new list.
             items = new ItemsList();
             items.add(new Item());
         }
+        // sets itemsAdapter to the locally saved shopping list and attaches a recycler view to it
         ItemsAdapter itemsAdapter = new ItemsAdapter(this, items);
         RecyclerView rcView = findViewById(R.id.rcItems);
         rcView.setAdapter(itemsAdapter);
