@@ -13,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 /**
  * This is an adapter that stores and displays Items in process.
@@ -25,8 +27,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     /** The activity holding this adapter */
     private final Context context;
 
-    /** The arraylist that holds the displayed items */
-    private final ArrayList<Item> items;
+    /** The ItemsList that holds the displayed items */
+    private final ItemsList items;
 
     /** The number of elements in items */
     private int size;
@@ -36,7 +38,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
      * @param context The activity this ItemsAdapter is being created in.
      * @param items The items to display through the RecyclerView.
      */
-    public ItemsAdapter(Context context, ArrayList<Item> items) {
+    public ItemsAdapter(Context context, ItemsList items) {
         super();
         this.context = context;
         this.items = items;
@@ -86,10 +88,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     }
 
     /**
-     * Gets the arrayList of items.
-     * @return The arrayList of items.
+     * Gets the list of items.
+     * @return The list of items.
      */
-    public ArrayList<Item> getItems() {
+    public ItemsList getItems() {
         return items;
     }
 
@@ -123,7 +125,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     public void recalculateTotal() {
         final double TAX = 0.07;
         double total = 0;
-        ArrayList<Item> items = getItems();
+        ItemsList items = getItems();
         for (Item item : items) {
             total += item.getPrice();
         }
@@ -195,6 +197,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 @Override
                 public void afterTextChanged(Editable s) {
                     items.get(getAdapterPosition()).setName(itemName.getText().toString());
+                    saveList();
                 }
             };
             itemName.addTextChangedListener(nameWatcher);
@@ -240,15 +243,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                     }
                     items.get(getAdapterPosition()).setPrice(itemPrice.getText().toString());
                     ItemsAdapter.this.recalculateTotal();
+                    saveList();
                 }
             };
             itemPrice.addTextChangedListener(priceWatcher);
             itemName.setOnFocusChangeListener(onFocusChangeListener);
 
             // Adds a listener to the removeButton which will remove this item on click.
-            removeButton.setOnClickListener(v -> ItemsAdapter.this.remove(
+            removeButton.setOnClickListener(v -> {ItemsAdapter.this.remove(
                     getAdapterPosition() < ItemsAdapter.this.size
-                            ? getAdapterPosition() : size - 1));
+                            ? getAdapterPosition() : size - 1);
+                    saveList();});
         }
 
         /**
@@ -273,6 +278,21 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
          */
         public Button getRemoveButton() {
             return removeButton;
+        }
+
+        /**
+         * Saves the contents of the items list to a local file.
+         */
+        public void saveList() {
+            try (ObjectOutputStream listSave = new ObjectOutputStream(new FileOutputStream(
+                    context.getApplicationContext().getFilesDir().toString() +
+                            "/saved_list.ser"))) {
+                listSave.writeObject(items);
+                System.out.println("Serializing");
+            } catch (IOException ioe) {
+                System.err.println("Issue writing serialized object:");
+                ioe.printStackTrace();
+            }
         }
     }
 }

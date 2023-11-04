@@ -1,5 +1,7 @@
 package com.pknepps.shoppinglist;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 /**
@@ -29,18 +31,22 @@ public class Item implements Serializable {
     }
 
     /**
-     * Creates a new instance of an item
-     * @param name The name of the item.
+     * Creates a new instance of an item from the output produced by item.toString().
+     * @param fromFile The name of the item.fromFile the output of Item.toString().
      */
-    public Item(String name) {
-        this( name, "0.0");
+    public Item(String fromFile) {
+        this(fromFile.substring(6, fromFile.indexOf(" Price: ")),
+                fromFile.substring(fromFile.indexOf(" Price: ") + 8,
+                        fromFile.indexOf( " removeButtonVisible")));
+        removeButtonVisible = Boolean.parseBoolean(fromFile.substring(fromFile.indexOf(
+                "removeButtonVisible: " + 21, fromFile.length() - 1)));
     }
 
     /**
      * Creates a new, default instance of an item.
      */
     public Item() {
-        this("");
+        this("", "0.00");
     }
 
     /**
@@ -97,6 +103,7 @@ public class Item implements Serializable {
     /**
      * @return a String representation of this object
      */
+    @NonNull
     public String toString() {
         return "Name: " + name + " Price: " + price + " removeButtonVisible: " +
                 removeButtonVisible;
