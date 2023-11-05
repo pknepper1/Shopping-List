@@ -116,6 +116,21 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         items.remove(position);
         notifyItemRemoved(position);
         size--;
+        saveList();
+    }
+
+    /**
+     * Removes all items in this adapter except for the last, empty item.
+     */
+    public void removeAll() {
+        for (int i = size - 1; i >= 0; i--) {
+            if (items.get(i).getPrice() != 0) {
+                remove(i);
+            }
+        }
+        if (size == 0) {
+            push(new Item());
+        }
     }
 
     /**
@@ -135,6 +150,21 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 .setText(String.format("$%.2f", total * TAX));
         ((TextView) ((AppCompatActivity) context).findViewById(R.id.totalTax))
                 .setText(String.format("$%.2f", total + (total * TAX)));
+    }
+
+    /**
+     * Saves the contents of the items list to a local file.
+     */
+    public void saveList() {
+        try (ObjectOutputStream listSave = new ObjectOutputStream(new FileOutputStream(
+                context.getApplicationContext().getFilesDir().toString() +
+                        "/saved_list.ser"))) {
+            listSave.writeObject(items);
+            System.out.println("Serializing");
+        } catch (IOException ioe) {
+            System.err.println("Issue writing serialized object:");
+            ioe.printStackTrace();
+        }
     }
 
     /**
@@ -250,10 +280,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             itemName.setOnFocusChangeListener(onFocusChangeListener);
 
             // Adds a listener to the removeButton which will remove this item on click.
-            removeButton.setOnClickListener(v -> {ItemsAdapter.this.remove(
+            removeButton.setOnClickListener(v -> ItemsAdapter.this.remove(
                     getAdapterPosition() < ItemsAdapter.this.size
-                            ? getAdapterPosition() : size - 1);
-                    saveList();});
+                            ? getAdapterPosition() : size - 1));
         }
 
         /**
@@ -278,21 +307,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
          */
         public Button getRemoveButton() {
             return removeButton;
-        }
-
-        /**
-         * Saves the contents of the items list to a local file.
-         */
-        public void saveList() {
-            try (ObjectOutputStream listSave = new ObjectOutputStream(new FileOutputStream(
-                    context.getApplicationContext().getFilesDir().toString() +
-                            "/saved_list.ser"))) {
-                listSave.writeObject(items);
-                System.out.println("Serializing");
-            } catch (IOException ioe) {
-                System.err.println("Issue writing serialized object:");
-                ioe.printStackTrace();
-            }
         }
     }
 }

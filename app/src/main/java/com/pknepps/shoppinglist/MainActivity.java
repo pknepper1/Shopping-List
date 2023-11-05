@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -70,5 +71,8 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rcView = findViewById(R.id.rcItems);
         rcView.setAdapter(itemsAdapter);
         rcView.setLayoutManager(new LinearLayoutManager(this));
+
+        Button clearAllButton = (Button) findViewById(R.id.clearAllButton);
+        clearAllButton.setOnClickListener(view -> itemsAdapter.removeAll());
     }
 }
