@@ -3,6 +3,9 @@ package com.pknepps.shoppinglist;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -102,7 +105,17 @@ public class MainActivity extends AppCompatActivity {
                 }
                 itemsAdapter.setTax_rate(s.toString());
                 itemsAdapter.recalculateTotal();
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+
+                // Saves the tax rate.
+                editor.putString("Tax", editTax.getText().toString());
+                editor.apply();
             }
         });
+
+        // Recovers saved tax value.
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        editTax.setText(sharedPref.getString("Tax", "0.07"));
     }
 }
