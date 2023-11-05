@@ -33,6 +33,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     /** The number of elements in items */
     private int size;
 
+    private double tax_rate;
+
     /**
      * Initializes a new ItemsAdapter.
      * @param context The activity this ItemsAdapter is being created in.
@@ -43,6 +45,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         this.context = context;
         this.items = items;
         size = items.size();
+        tax_rate = 0.07;
     }
 
     /**
@@ -96,6 +99,25 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     }
 
     /**
+     * Gets the current tax rate.
+     * @return The current set tax rate.
+     */
+    public double getTax_rate() {
+        return tax_rate;
+    }
+
+    /**
+     * Sets the new tax rate.
+     * @param tax_rate The new tax rate, as a string
+     */
+    public void setTax_rate(String tax_rate) {
+        if (tax_rate.equals("") || tax_rate.equals(".")) {
+            tax_rate = "0.00";
+        }
+        this.tax_rate = Double.parseDouble(tax_rate);
+    }
+
+    /**
      * Adds new item to the end of items.
      * @param item The item to add.
      */
@@ -116,6 +138,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         items.remove(position);
         notifyItemRemoved(position);
         size--;
+        recalculateTotal();
         saveList();
     }
 
@@ -138,7 +161,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
      */
     @SuppressLint("DefaultLocale")
     public void recalculateTotal() {
-        final double TAX = 0.07;
         double total = 0;
         ItemsList items = getItems();
         for (Item item : items) {
@@ -147,9 +169,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         ((TextView) ((AppCompatActivity) context).findViewById(R.id.total))
                 .setText(String.format("$%.2f", total));
         ((TextView) ((AppCompatActivity) context).findViewById(R.id.tax))
-                .setText(String.format("$%.2f", total * TAX));
+                .setText(String.format("$%.2f", total * tax_rate));
         ((TextView) ((AppCompatActivity) context).findViewById(R.id.totalTax))
-                .setText(String.format("$%.2f", total + (total * TAX)));
+                .setText(String.format("$%.2f", total + (total * tax_rate)));
     }
 
     /**

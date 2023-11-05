@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -72,7 +75,34 @@ public class MainActivity extends AppCompatActivity {
         rcView.setAdapter(itemsAdapter);
         rcView.setLayoutManager(new LinearLayoutManager(this));
 
-        Button clearAllButton = (Button) findViewById(R.id.clearAllButton);
+        Button clearAllButton = findViewById(R.id.clearAllButton);
         clearAllButton.setOnClickListener(view -> itemsAdapter.removeAll());
+
+        EditText editTax = findViewById(R.id.tax_option);
+        editTax.addTextChangedListener(new TextWatcher() {
+
+            // Unused
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            // Unused
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            // Sets the tax rate to the current value in this EditText.
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().equals(".")) {
+                    editTax.setText("0.");
+                    editTax.setSelection(editTax.getText().length());
+                }
+                itemsAdapter.setTax_rate(s.toString());
+                itemsAdapter.recalculateTotal();
+            }
+        });
     }
 }
