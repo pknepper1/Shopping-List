@@ -111,8 +111,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
      * @param tax_rate The new tax rate, as a string
      */
     public void setTax_rate(String tax_rate) {
-        if (tax_rate.equals("") || tax_rate.equals(".")) {
+        if (tax_rate.equals(".")) {
             tax_rate = "0.00";
+        }
+        if (tax_rate.equals("")) {
+            tax_rate = "0.07";
         }
         this.tax_rate = Double.parseDouble(tax_rate);
     }
