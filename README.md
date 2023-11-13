@@ -2,16 +2,9 @@
 A simple android app used to keep track of a shopping list and total price of all items.
 ----------------------------------------------------------------------------------------
 ### How To Download:
-Downloading files from github directly onto an android device can be tricky. A quick way is to click the
-generated DownGit link below:
+This app is published on the android play store, and can be downloaded via the following link:
 
-https://downgit.github.io/#/home?url=https://github.com/pknepps/Shopping-List/blob/main/Shopping-List.apk
-
-If you don't trust downGit, you may download this repository to your local pc, then pick any file 
-transfer method to move the Shopping-List.apk  file to your android device.
-
-Run the .apk package on your android device to install. You may need to enable "Install from unknown apps" (Android 8.0 or higher) 
-or "Install from unknown sources" (Android 7.1.1 or lower) within your device settings.
+https://play.google.com/store/apps/details?id=com.pknepps.shoppinglist
 
 ### Usage:
 Begin by adding all items to your shopping list in the "Items" column of the table. New rows 
