@@ -6,6 +6,8 @@ This app is published on the android play store, and can be downloaded via the f
 
 https://play.google.com/store/apps/details?id=com.pknepps.shoppinglist
 
+It may also be downloaded by cloning this repository and installing the Shopping-List.apk file from the root of this repository.
+
 ### Usage:
 Begin by adding all items to your shopping list in the "Items" column of the table. New rows 
 for items will automatically be added as text boxes are filled.  
